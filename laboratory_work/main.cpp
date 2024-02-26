@@ -1,30 +1,28 @@
 #include <iostream>
 #include <fstream>
-#include "graph.h"
-#include "BMP.h"
+#include "Painter.h"
 
 int main() {
-    Graph graph;
+    Painter painter;
 
     std:: ifstream inp("test.txt");
     if (inp.is_open()) {
         int V, E;
         int a1, a2;
         inp >> V >> E;
-        graph.create_vertices(V);
+        painter.graph->create_vertices(V);
         for (int i = 0; i < E; ++i) {
             inp >> a1 >> a2;
-            graph.relation(a1, a2);
+            painter.graph->relation(a1, a2);
         }
 
     }
     inp.close();
-    
-    graph.sort_vertices();
-    //graph.print();
+    painter.graph->sort_vertices();
 
-    BMP painter;
-    painter.write_file("out2.bmp");
-    painter.write();
+    //painter.graph->print();
+
+    //painter.draw_graph();
+    //painter.bmp->write();
     return 0;
 }

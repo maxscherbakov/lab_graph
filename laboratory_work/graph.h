@@ -2,27 +2,31 @@
 #define GRAPH_H
 #include <vector>
 
-class Point {
+struct Point {
     int number;
+    int count_rel {0};
     std:: vector <int> relations;
-    int count_rel;
-    public:
-        Point(int num_) {
-            number = num_;
-        }
-        void add_relation(int);
-        void print();
-        int get_count_rel() { return count_rel; }
+    int x {0};
+    int y {0};
+    int mark {-1};
+    Point(int num_) {
+        number = num_;
+    }
+    void add_relation(int);
+    void print();
+    int get_count_rel() { return count_rel; }
 };
 
 
-class Graph {
+struct Graph {
     std::vector <Point> points;
-    public:
-        void relation(int, int);
-        void create_vertices(int);
-        void print();
-        void sort_vertices();
+    void relation(int, int);
+    void create_vertices(int);
+    void print();
+    void sort_vertices();
+    void assemble_graph();
+    void create_graph();
+    void del_vertices(std::vector <Point> &, Point &, int, int, int );
 };
 
 

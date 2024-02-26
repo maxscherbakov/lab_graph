@@ -3,10 +3,6 @@
 #include <iostream>
 
 void BMP::write_file(const char *fname) {
-
-    data.resize(bmp_info_header.height * bmp_info_header.width * 3);
-    file_header.file_size = data.size() + file_header.offset_data;
-    bmp_info_header.size_image = data.size(); 
     std:: ofstream of{fname, std:: ios_base::binary};
     if (of.is_open()) {
         of.write((const char*)&file_header, sizeof(file_header));
