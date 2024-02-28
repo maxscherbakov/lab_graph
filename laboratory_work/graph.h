@@ -24,9 +24,8 @@ struct Graph {
     void create_vertices(int);
     void print();
     void sort_vertices();
-    void assemble_graph();
-    void create_graph();
-    void del_vertices(std::vector <Point> &, Point &, int, int, int );
+    void support_func(std::vector<Point> &, std::vector<Point> &, int &, int &, std::vector <int> &); 
+    void del_vertices(std::vector <Point> &, Point &, int, int &);
 };
 
 

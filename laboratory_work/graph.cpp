@@ -36,61 +36,84 @@ void Graph::print() {
 
 
 
-void Graph::del_vertices(std::vector <Point> & vec, Point & ver, int i, int k, int num) {
-    if (i <= k) {
-        i += 1;
-        for (int j : ver.relations) {
-            vec[j-1].number = 0;
-            del_vertices(vec, vec[j-1], i, k, num);
+void Graph::del_vertices(std::vector <Point> & vec, Point & ver, int k, int &mark) {
+    std::vector <int> next = {};
+    std::vector <int> last = {ver.number};
+    int count = 0;
+    while (count < k) {
+        for (int i : last) {
+            for (int j : vec[i-1].relations) {
+                if (vec[j-1].mark != mark) {
+                    vec[j-1].mark = mark;
+                    vec[j-1].number = 0;
+                    next.push_back(j);
+                }
+            }
         }
+        last = next;
+        next = {};
+        ++count;
     }
 }
 
+void Graph::support_func(std::vector<Point> & V, std::vector<Point> & V_, int & mark, int & k,
+                  std::vector <int> & num_vec) {
+    for (int i : num_vec) {
+        if (V[i].number != 0) {
+            V_.push_back(V[i]);
+            V[i].mark = mark;
+            del_vertices(V, V[i], std::pow(2, k), mark);
+            ++mark;
+            mark %= 100;
+        }
+    }
+
+}
 
 void Graph::sort_vertices() {
     std::vector <Point> V = points;
     std::vector <std::vector <Point>> sort_vec;
     std::vector <Point> V_;
+    std::vector <int> num_vec;
     sort_vec.push_back(V);
     int k = 1;
+    int mark = 1;
     while (k != -1) {
         V_ = {};
-        for (int i = 0; i < V.size(); ++i) {
-            if (V[i].number != 0) {
-                V_.push_back(V[i]);
-                del_vertices(V, V[i], 1, std::pow(2, k), i);
-            }
-        }
+        num_vec = {};
+        for (Point i : sort_vec[sort_vec.size()-1]) num_vec.push_back(i.number - 1);
+
+        support_func(V, V_, mark, k, num_vec);
         sort_vec.push_back(V_);
         ++k;
-        if (V_.empty()) k = -1;
+        if (V_.size() <= 3) k = -1;
     }
+    k = sort_vec.size() - 1;
+    if (V_.size() < 3) {
+        num_vec = {};
+        for (Point i : sort_vec[sort_vec.size() - 2]) {
+            num_vec.push_back(i.number - 1);
+        }
+
+        while ( std::next_permutation(num_vec.begin(),num_vec.end()) ) {
+            V_ = {};
+            for (int i : num_vec) {
+                V[i].number = i + 1;
+            }
+            support_func(V, V_, mark, k, num_vec);
+            if (V_.size() == 3) {
+                sort_vec[sort_vec.size()-1] = V_;
+                break;
+            }
+
+        }
+    }
+
     for (int i = 0; i < sort_vec.size(); ++i) {
         std:: cout << i << '\n';
         for (int j = 0; j < sort_vec[i].size(); ++j) {
             std::cout << sort_vec[i][j].number << ' ';
         }
         std::cout << '\n';
-
     }
-}
-
-
-void Graph::assemble_graph() {
-    sort_vertices();
-    int now_x = 2;
-    int now_y = 2;
-    for (int cur = 0; cur < points.size(); ++cur) {
-        points[cur].x = now_x;
-        points[cur].y = now_y;
-        now_x += 10;
-        for (int i : points[cur].relations) {
-            if (points[i-1].x == 0) {
-                points[i-1].x = now_x;
-                points[i-1].y = now_y;
-            }
-            now_y += 10;
-        }
-    }
-
 }
