@@ -20,7 +20,7 @@ void Painter::draw_pixel(int x, int y) {
 }
 
 void Painter::draw_vertex(int x, int y) {
-    draw_pixel(x+1, y+1);
+    draw_pixel(x+1,y+1);
     draw_pixel(x+2, y);
     draw_pixel(x+3, y);
     draw_pixel(x+4, y+1);
